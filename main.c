@@ -13,7 +13,7 @@ FILE *fp = fopen(argv[i], "r");
 
 if (fp == NULL)
 {
-    printf("Could not open %s\n", argv[i]);
+    perror(argv[i]);
 continue;
 
 }
