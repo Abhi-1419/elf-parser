@@ -1,0 +1,15 @@
+# Build output
+elf-parser
+
+# Object files
+*.o
+
+# Debug symbols
+*.dSYM/
+
+# Backup files
+*.save
+*~
+
+# Editor swap files
+*.swp
