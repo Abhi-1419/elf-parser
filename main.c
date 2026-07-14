@@ -18,8 +18,33 @@ if (fp == NULL)
 continue;
 
 }
-fread(header, 1, 16, fp);
+
+
+size_t bytes_read=fread(header, 1, 16, fp);
+
+if(bytes_read != 16){
 printf("File: %s\n", argv[i]);
+printf("Could not read ELF header\n");
+fclose(fp);
+continue;}
+
+if(header[0] == 0x7F && 
+
+header[1] == 'E' && 
+
+header[2] == 'L' && 
+
+header[3] == 'F' ){ 
+printf("File: %s\n", argv[i]);
+printf("✓ Valid ELF file\n");}
+
+else{
+printf("File: %s\n", argv[i]);
+ printf("✗ Not an ELF file\n");
+
+fclose(fp); 
+ continue;}
+
 for (int j = 0; j < 16; j++){
 printf("%02X ", header[j]); 
 
