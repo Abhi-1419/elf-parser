@@ -1,27 +1,59 @@
 # ELF Parser
 
-A command-line ELF parser written in C to understand how Linux executables are structured. The project focuses on learning binary formats, low-level file parsing, and systems programming without relying on high-level parsing libraries.
+A simple ELF64 parser written in C to understand how Linux executables are structured.
+
+This project was built as a learning exercise in systems programming and reverse engineering. Instead of relying on `<elf.h>`, the parser manually defines the ELF header structure and extracts information directly from the binary file.
 
 ## Features
 
-* Parse one or more files from the command line
-* Open and validate input files
-* Read the first 16 bytes of an ELF file (`e_ident`)
-* Display raw ELF header bytes in hexadecimal
-* Graceful error handling with `perror()`
-* Clean resource management using `fopen()` and `fclose()`
+* Validate ELF files using the ELF magic number
+* Parse the ELF identification (`e_ident`) fields:
 
-## Concepts Practiced
+  * Class (ELF32 / ELF64)
+  * Endianness
+  * ELF Version
+  * OS ABI
+* Parse ELF header fields:
 
-* Command-line arguments (`argc` / `argv`)
-* File I/O (`fopen`, `fread`, `fclose`)
-* Arrays and pointers
-* Binary file parsing
-* Hexadecimal representation
-* Error handling
-* Looping through multiple input files
+  * File Type
+  * Machine Architecture
+  * Entry Point
+  * Program Header Offset
+  * Section Header Offset
+  * ELF Header Size
+  * Program Header Entry Size
+  * Program Header Count
+  * Section Header Entry Size
+  * Section Header Count
+  * Section Name String Table Index
+* Support parsing multiple files from the command line
+* Handle invalid files and I/O errors gracefully
 
-## Build
+## Example
+
+```bash
+$ ./elf-parser /bin/ls
+
+File: /bin/ls
+✓ Valid ELF file
+Class: ELF64
+Endian: Little Endian
+Version: Current
+OS ABI: System V
+Type: ET_DYN (Shared object or PIE executable)
+Machine: AMD x86-64
+Entry point: 0x6760
+Program Header Offset: 64 bytes
+Section Header Offset: 156712 bytes
+ELF Header Size: 64
+Program Header Entry Size: 56
+Program Header Count: 14
+Section Header Entry Size: 64
+Section Header Count: 30
+Section Name String Table Index: 29
+```
+
+## Building
 
 ```bash
 gcc -Wall -Wextra main.c -o elf-parser
@@ -30,42 +62,31 @@ gcc -Wall -Wextra main.c -o elf-parser
 ## Usage
 
 ```bash
-./elf-parser /bin/ls
+./elf-parser <elf_file> [elf_file...]
 ```
 
-Parse multiple files:
+Example:
 
 ```bash
 ./elf-parser /bin/ls /bin/bash
 ```
 
-## Example Output
+## Why I Built This
 
-```text
-File: /bin/ls
-7F 45 4C 46 02 01 01 00 00 00 00 00 00 00 00 00
+The goal of this project was to learn how ELF binaries are laid out on disk and strengthen my understanding of:
 
-File: /bin/bash
-7F 45 4C 46 02 01 01 00 00 00 00 00 00 00 00 00
-```
+* Binary file parsing
+* C structures (`struct`)
+* Fixed-width integer types (`stdint.h`)
+* File I/O (`fopen`, `fread`)
+* Linux executable internals
 
-## Roadmap
+Rather than using existing parsing libraries, I implemented the parsing logic manually to better understand the ELF format.
 
-* [x] Command-line argument parsing
-* [x] Open multiple files
-* [x] Read ELF identification bytes (`e_ident`)
-* [x] Print ELF header bytes in hexadecimal
-* [ ] Validate the ELF magic number
-* [ ] Decode ELF class (32-bit / 64-bit)
-* [ ] Decode endianness
-* [ ] Parse the complete ELF header
-* [ ] Parse Program Headers
-* [ ] Parse Section Headers
-* [ ] Display the entry point address
-* [ ] List ELF sections
-* [ ] List imported shared libraries
-* [ ] Refactor into multiple source files
+## Future Improvements
 
-## Learning Goal
-
-This project is part of my journey into systems programming, reverse engineering, binary exploitation, and Linux internals. Rather than relying on existing tools, the goal is to understand the ELF format by parsing it manually, one field at a time.
+* Parse the Program Header Table
+* Parse the Section Header Table
+* Display section names
+* Parse symbol tables
+* Parse dynamic linking information
