@@ -4,13 +4,25 @@
 #include <stdlib.h>
 struct ELF_Header
 {
-   uint8_t e_ident[16];
-uint16_t e_type;
-uint16_t e_machine;
-uint32_t e_version;
-uint64_t e_entry;
-uint64_t e_phoff;
-uint64_t e_shoff;
+    uint8_t  e_ident[16];
+
+    uint16_t e_type;
+    uint16_t e_machine;
+    uint32_t e_version;
+
+    uint64_t e_entry;
+    uint64_t e_phoff;
+    uint64_t e_shoff;
+
+    uint32_t e_flags;
+
+    uint16_t e_ehsize;
+    uint16_t e_phentsize;
+    uint16_t e_phnum;
+
+    uint16_t e_shentsize;
+    uint16_t e_shnum;
+    uint16_t e_shstrndx;
 };
 
 int main(int argc, char *argv[])
@@ -168,6 +180,14 @@ switch (elf.e_machine)
 printf("Entry point: 0x%lX\n", elf.e_entry);
 printf("Program Header Offset: %lu bytes\n", elf.e_phoff);
 printf("Section Header Offset: %lu bytes\n", elf.e_shoff);
+printf("Program Header Offset: %lu\n", elf.e_phoff);
+printf("Section Header Offset: %lu\n", elf.e_shoff);
+printf("ELF Header Size: %u\n", elf.e_ehsize);
+printf("Program Header Entry Size: %u\n", elf.e_phentsize);
+printf("Program Header Count: %u\n", elf.e_phnum);
+printf("Section Header Entry Size: %u\n", elf.e_shentsize);
+printf("Section Header Count: %u\n", elf.e_shnum);
+printf("Section Name String Table Index: %u\n", elf.e_shstrndx);
 printf("\n");
 fclose(fp);  
 
